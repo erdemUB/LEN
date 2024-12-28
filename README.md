@@ -1,7 +1,7 @@
 # Large Engagement Networks for Classifying Coordinated Campaigns and Organic Twitter Trends
 
 ### Overview
-Our dataset(LEN) is a graph classification benchmark of Turkish Twitter engagement networks to help identify campaign graphs and other downstream tasks or identifying the type of campaign. The data is publically available [here](https://jakir-sust.github.io/large-engagement-dataset/).
+Our dataset(LEN) is a graph classification benchmark of Turkish Twitter engagement networks to help identify campaign graphs and other downstream tasks or identifying the type of campaign. The data is publicly available [here](https://erdemub.github.io/large-engagement-network/).
 ### Dataset Description
 LEN, consists of an overall dataset and a small dataset. 
 **Small Dataset (LEN-Small)**: The small dataset contains 51 campaign and 49 non-campaign networks. There are 6 sub-types in campaign and 7 in non-campaign. The following is a brief dataset description.
@@ -65,7 +65,7 @@ An example script to run the code is given here:
 ```
 python3 train_twitter_MPNN.py --model GCN --data_type small --multivariate 0 --hidden_dim 256 --lr 0.001 --output_dim 2 --small_graphs_path ./small_graphs --all_graphs_path ./all_graphs
 ```
-We have more scripts availabe in the run directory given [here]().
+We have more scripts availabe in the run directory given [here](https://github.com/erdemUB/LEN/tree/main/run).
 
 
 
