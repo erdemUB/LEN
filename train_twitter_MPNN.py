@@ -101,42 +101,6 @@ class GCN(torch.nn.Module):
         #x = F.leaky_relu(self.conv3(x, edge_index))
         return x
 
-'''
-class GCNPooling(torch.nn.Module):
-    def __init__(self, input_dim, hidden_dim, num_pre_layers,
-                 num_post_layers, num_classes, pool_ratio=0.1):
-        super().__init__()
-
-        # Added pre layers
-        self.pre_layers = torch.nn.ModuleList()
-        for i in range(num_pre_layers):
-            self.pre_layers.append(GCNConv(input_dim,hidden_dim))
-            input_dim = hidden_dim
-
-        # Pooling layers
-        self.pool = SAGPooling(hidden_dim, ratio=pool_ratio)
-
-        # Added post layers
-        self.post_layers = torch.nn.ModuleList()
-        for i in range(num_post_layers):
-            self.pre_layers.append(GCNConv(hidden_dim, hidden_dim))
-
-        # Add final layer
-        self.out = LazyLinear(num_classes)
-
-    def forward(self, x, edge_index):
-        # Parse through the pre layers
-        for layer in self.pre_layers:
-            x = F.leaky_relu(layer(x, edge_index))
-
-        # Perform pooling
-        x, edge_index, _, _, _, _ = self.pool(x, edge_index)
-
-        # Parse through the post layers
-        for layer in self.post_layers:
-            x = F.leaky_relu(layer(x,edge_index))
-        return x
-'''
 
 
 def copy_graph():
@@ -580,35 +544,7 @@ if __name__ == '__main__':
         print(f'Recall: {all_mean[2]} ± {all_std[2]}')
         print(f'F1-Score: {all_mean[3]} ± {all_std[3]}')
 
-    # for pooling
-    '''
-    else:
-        print("Pooling and device name==  ", device)
-        model = GCNPooling(input_dim=num_node_features,
-                           hidden_dim=hidden_channels,
-                           num_pre_layers=1,
-                           num_post_layers=1,
-                           num_classes=num_classes)
 
-
-        all_results = []
-        # epochs = 100
-        for exp in range(0, 1):
-            seed_everything(exp)
-            model.to(device)
-            model, train_loss_epochs, val_loss_epochs = train_model(model, epochs, train_data, val_data, args)
-            y_pred, y_actual = predict(model, test_data, args)
-            acc, prec, rec, f1 = evaluate(y_pred, y_actual)
-
-            all_results.append([acc, prec, rec, f1])
-            print(f"Model: {model_name}, Accuracy: {acc}, Precision: {prec}, Recall: {rec}, F1: {f1}")
-
-        print(all_results, np.mean(all_results, axis=0), np.std(all_results, axis=0))
-        all_mean, all_std = np.round(np.mean(all_results, axis=0), 3), np.round(np.std(all_results, axis=0), 3)
-        print(model_name, args.data_type)
-        print(str(all_mean[0]) + ' ± ' + str(all_std[0]), ',', str(all_mean[1]) + ' ± ' + str(all_std[1]), ',',
-              str(all_mean[2]) + ' ± ' + str(all_std[2]), ',', str(all_mean[3]) + ' ± ' + str(all_std[3]))    
-    '''
 
 
 
