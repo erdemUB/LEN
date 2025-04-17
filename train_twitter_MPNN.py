@@ -384,8 +384,6 @@ def getReport(y_pred,y_actual):
 
 if __name__ == '__main__':
     print("Inside Main")
-    #small_dir ="/projects/academic/erdem/atulanan/twitter_analytics/new_networks/fulldata/descriptive_data/small_encoder_final"
-    #All_dir ="/projects/academic/erdem/atulanan/twitter_analytics/new_networks/fulldata/descriptive_data/encoder_final"
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', default='GCN', help="Enter model name")
