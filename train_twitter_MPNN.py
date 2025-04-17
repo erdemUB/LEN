@@ -103,40 +103,6 @@ class GCN(torch.nn.Module):
 
 
 
-def copy_graph():
-    fake_dir = "/projects/academic/erdem/atulanan/twitter_analytics/new_networks/fulldata/descriptive_data/encoder_without_FakeTrend"
-    small_list ="/projects/academic/erdem/atulanan/twitter_analytics/new_networks/fulldata/descriptive_data/small_graphs.txt"
-    small_dir ="/projects/academic/erdem/atulanan/twitter_analytics/new_networks/fulldata/descriptive_data/small_encoder"
-    files = list(glob.glob(fake_dir + '/*.json'))
-    small_files = list(glob.glob(small_dir + '/*.json'))
-    print(files[0])
-
-    with open(small_list) as file:
-        lines = [str(line.rstrip()) for line in file]
-    print(lines[0], type(lines), len(lines), len(files))
-
-    for sm_file in small_files:
-        gname = sm_file.split('/')[-1].split('.')[0]
-        orig_dir = "/projects/academic/erdem/atulanan/twitter_analytics/new_networks/fulldata/descriptive_data/encoder_without_FakeTrend/"
-        src = orig_dir + gname + ".json"
-        dst = "/projects/academic/erdem/atulanan/twitter_analytics/new_networks/fulldata/descriptive_data/small_encoder_without_FakeTrend/"
-
-        shutil.copy2(src, dst)
-
-    cnt = 0
-    for file in files:
-        gname = file.split('/')[-1].split('.')[0]
-        for sm_file in small_files:
-            sm_file = sm_file.split('/')[-1].split('.')[0]
-            if gname == sm_file:
-                print(gname, sm_file)
-                cnt+=1
-        # print(gname, file)
-        # break
-    print(cnt)
-# copy_graph()
-# exit()
-
 def load_split_data(data_path):
     print("Loading dataset.....")
     print(data_path)
