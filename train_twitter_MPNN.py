@@ -95,10 +95,7 @@ class GCN(torch.nn.Module):
 
     def forward(self, x, edge_index):
         x = F.leaky_relu(self.conv1(x, edge_index))
-        #x = self.dropout(x)
         x = F.leaky_relu(self.conv2(x, edge_index))
-        #x = self.dropout(x)
-        #x = F.leaky_relu(self.conv3(x, edge_index))
         return x
 
 
@@ -392,7 +389,6 @@ if __name__ == '__main__':
     parser.add_argument('--output_dim', default=2, help="Enter output dimensions")
     parser.add_argument('--data_type', default='small', help="Either small or All")
     parser.add_argument('--edge_attr', default=0, help="Either small or All")
-    #parser.add_argument('--pooling', default=0, help="Enter Pooling method")
     parser.add_argument('--multivariate', default=0, help="Initialize if you are performing multivariate classification")
     parser.add_argument("--classify_noise", default=0, help="Classify the noise graphs")
     parser.add_argument("--classify_news", default=0, help="Classify the news graphs")
@@ -401,11 +397,9 @@ if __name__ == '__main__':
 
 
     args = parser.parse_args()
-    model_name = args.model # model name
-    #num_node_features = int(args.input_dim) # input dim
-    hidden_channels = int(args.hidden_dim) # hidden dim
-    num_classes = int(args.output_dim) # output dim
-    #pooling = args.pooling # Pooling Flag
+    model_name = args.model
+    hidden_channels = int(args.hidden_dim) 
+    num_classes = int(args.output_dim) 
     multivariate = int(args.multivariate)
     classify_noise = int(args.classify_noise)
     classify_news = int(args.classify_news)
@@ -429,14 +423,11 @@ if __name__ == '__main__':
         train_data, test_data, val_data = load_data(data_path)
     else:
         train_data, test_data, val_data = load_split_data(data_path)
-    # train_data, test_data, val_data = train_data[:10], test_data[:2], val_data[:2]
     print("Dataset loading done  ", data_path, len(train_data))
     epochs = 100
 
     print(f"Number of node features: {num_node_features} and number of edge features :{num_edge_features}")
 
-    #if pooling == 0:
-    #print("No pooling and device name==  ", device)
     conv_dictionary = {'GCN': (GCNConv(num_node_features, hidden_channels),GCNConv(hidden_channels, hidden_channels)),
                        'GAT': (GATConv(num_node_features, hidden_channels),GATConv(hidden_channels, hidden_channels)),
                        'GIN': (GINConv(Sequential(Linear(num_node_features, hidden_channels), nn.LeakyReLU(0.2), Linear(hidden_channels, hidden_channels), nn.LeakyReLU(0.2),),train_eps=False),
@@ -456,14 +447,10 @@ if __name__ == '__main__':
         else:
             conv1 = conv_dictionary[model_name][0]
             conv2 = conv_dictionary[model_name][1]
-            #conv3 = conv_dictionary[model_name][2]
             args.edge_attr = 0
-            #model = GCN(conv1, conv2, conv3)
             model = GCN(conv1, conv2)
         model.to(device)
-        # print("Before train")
         model, train_loss_epochs, val_loss_epochs = train_model(model, epochs, train_data, val_data, args)
-        #print(f"Training Loss is {train_loss_epochs}")
         y_pred, y_actual, y_scores = predict(model, test_data, args)
 
         if classify_noise:
@@ -472,13 +459,6 @@ if __name__ == '__main__':
             for y, graph in zipped_lists:
                 print(y, graph)
             sys.exit()
-
-        #report = getReport(y_pred, y_actual)
-        #print(f"Classification Report \n {report}")
-
-        # Save arrays to the same file
-        #np.savez(f"{data_path}/ROC_Results/{model_name}_{args.data_type}_{exp}.npz", y_scores=y_scores, y_actual=y_actual)
-        #np.savez(f"{data_path}/{model_name}_{exp}_pred_actual.npz", y_scores=y_scores, y_actual=y_actual)
 
         if(multivariate):
             acc, prec, rec, micro_f1, macro_f1 = evaluate(y_pred, y_actual)
